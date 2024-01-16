@@ -1,0 +1,194 @@
+ticket:
+  error-occurred: 'An error occurred.'
+  invalid-department-selection: 'Please enter a value that matches the list.'
+
+review:
+  use-review-command: 'Please use the /review command to write a review.'
+
+timeouts:
+  ticket-timeout:
+    reason: 'This ticket went unanswered for a long time.'
+    warn-in-half: 'If %time% hours have passed since your last message sent to your %ticket.user% ticket, your ticket will be closed automatically.'
+  commission-offer:
+    reason: 'The ticket was not offered for a long time.'
+    warn-in-half: 'If %time% hours have passed since your last message sent to your %ticket.user% ticket, your ticket will be closed automatically.'
+
+modals:
+  give-offer:
+    title: 'Bid!'
+    price:
+      label: 'Price'
+      placeholder: 'Your Quote'
+    time:
+      label: 'Deadline'
+      placeholder: 'Your Deadline'
+    done: 'Your offer has been forwarded to the customer!'
+  review-ticket:
+    title: 'Review Us'
+    review:
+      label: 'Review'
+      placeholder: 'Write your review'
+    only-author: 'Only %user% can do this.'
+    done: 'Thanks, your review has been sent successfully.'
+
+menus:
+  rate-freelancer:
+    done: 'Thank you for your assessment.'
+
+buttons:
+  give-offer:
+    label: 'Bid'
+    not-found: 'Bilet bulunamadı.'
+    already-claimed: 'A team member has already joined this ticket.'
+  creation-confirm:
+    label: 'Confirm'
+    only-author: 'Only %user% can use this button.'
+  creation-restart:
+    label: 'Reset'
+    only-author: 'Only %user% can use this button.'
+  accept-offer:
+    label: 'Accept'
+    freelancer-added-to-ticket: 'Our teammate has been added to %user% ticket.'
+    only-author: 'Only %user% can use this button.'
+  freelancer-profile:
+    label: 'View Profile'
+  creation-commission:
+    label: 'Order'
+    already-have: 'You can only have one active ticket at a time.'
+    successfully-created: 'Your ticket has been successfully created. You can go to %ticket.channel%.'
+  creation-support:
+    label: 'Support'
+    already-have: 'You can only have one active ticket at a time.'
+    successfully-created: 'Your ticket has been successfully created. You can go to %ticket.channel%.'
+  close-ticket:
+    label: 'Close The Ticket'
+
+commands:
+  ticket:
+    name: 'ticket'
+    description: 'Generic ticket command.'
+    only-in-ticket-channel: 'You can only use this command on your ticket channel.'
+    send-creation-message:
+      name: 'sendcreationmessage'
+      description: 'Sends ticket creation message.'
+      cannot-send-setup-message: 'You cannot set up ticket creation message on the team/staff server.'
+      done: 'Ticket creation message sent.'
+  add:
+    name: 'add'
+    description: 'Add user to this ticket.'
+    member-already-added: 'This user has already been added to this ticket.'
+    done: '%user% successfully added to ticket.'
+    options:
+      user:
+        name: 'user'
+        description: 'User to be added to ticket.'
+  remove:
+    name: 'remove'
+    description: 'Remove user from ticket.'
+    member-already-removed: 'This user has not already been added to the ticket.'
+    done: '%user% successfully removed from ticket.'
+    options:
+      user:
+        name: 'user'
+        description: 'User to be removed from ticket.'
+  close:
+    name: 'close'
+    description: 'Close a ticket.'
+    you-cannot-close: 'You can''t close this order ticket.'
+    already-closing: 'The closing process has already been initiated for this ticket.'
+    already-closed: 'This ticket has already been closed.'
+    done: 'Closing ticket...'
+    options:
+      completed:
+        name: 'completed'
+        description: 'Is order completed?'
+      reason:
+        name: 'reason'
+        description: 'Close reason.'
+  profile:
+    name: 'profile'
+    description: 'See our team members profiles.'
+    not-found: 'This user''s profile was not found.'
+    options:
+      user:
+        name: 'user'
+        description: 'User'
+  profiles:
+    name: 'profiles'
+    description: 'Create, update or delete profiles.'
+    create:
+      name: 'create'
+      description: 'Create a profile.'
+      already-have: 'This user already has a profile.'
+      done: 'A profile has been successfully created for %user%.'
+      options:
+        user:
+          name: 'user'
+          description: 'User.'
+        url:
+          name: 'url'
+          description: 'Url.'
+        accepted:
+          name: 'accepted'
+          description: 'Accepted order count.'
+        finished:
+          name: 'finished'
+          description: 'Finished order count.'
+        reviews:
+          name: 'reviews'
+          description: 'Review count.'
+        stars:
+          name: 'stars'
+          description: 'Star count.'
+    update:
+      name: 'update'
+      description: 'Update a profile.'
+      profile-not-found: 'This user does not have a profile, please create a profile first.'
+      done: 'User %user% profile updated successfully.'
+      options:
+        user:
+          name: 'user'
+          description: 'User.'
+        url:
+          name: 'url'
+          description: 'Url.'
+        accepted:
+          name: 'accepted'
+          description: 'Accepted order count.'
+        finished:
+          name: 'finished'
+          description: 'Finished order count.'
+        reviews:
+          name: 'reviews'
+          description: 'Review count.'
+        stars:
+          name: 'stars'
+          description: 'Star count.'
+    delete:
+      name: 'delete'
+      description: 'Delete a profile.'
+      profile-not-found: 'This user does not have a profile.'
+      done: '%user.tag% profile has been successfully deleted.'
+      options:
+        user:
+          name: 'user'
+          description: 'The user whose profile will be deleted.'
+  review:
+    name: 'review'
+    description: 'Write review.'
+    wrong-channel: 'You cannot use this command on this channel.'
+    only-customers-can-use: 'Only customers can use this command.'
+    done: 'Your review has been sent successfully.'
+    options:
+      stars:
+        name: 'stars'
+        description: 'Stars count.'
+      review:
+        name: 'review'
+        description: 'Your review.'
+        length:
+          min: 1
+          max: 100
+  stats:
+    name: 'stats'
+    description: 'Stats command.'

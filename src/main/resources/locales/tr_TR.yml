@@ -1,0 +1,193 @@
+ticket:
+  error-occurred: 'Bir hata oluştu.'
+  invalid-department-selection: 'Lütfen listedekiler ile eşleşen bir değer girin.'
+
+review:
+  use-review-command: 'Görüş yazmak için lütfen /görüş komutunu kullanın.'
+
+timeouts:
+  ticket-timeout:
+    reason: 'Bu bilete uzun süre yanıt verilmedi.'
+    warn-in-half: '%ticket.user% biletinize gönderilen son mesajınız üzerinden %time% saat geçerse biletiniz otomatik olarak kapatılacaktır.'
+  commission-offer:
+    reason: 'Bilete uzun süre teklif verilmedi.'
+    warn-in-half: '%ticket.user% biletinize gönderilen son mesajınız üzerinden %time% saat geçerse biletiniz otomatik olarak kapatılacaktır.'
+modals:
+  give-offer:
+    title: 'Teklif Ver!'
+    price:
+      label: 'Fiyat'
+      placeholder: 'Fiyat teklifiniz.'
+    time:
+      label: 'Zaman'
+      placeholder: 'Zaman teklifiniz'
+    done: 'Teklifiniz müşteriye iletildi!'
+  review-ticket:
+    title: 'Bizi Değerlendirin'
+    review:
+      label: 'Değerlendirme'
+      placeholder: 'Görüşünüzü yazın'
+    only-author: 'Sadece %user% bunu kullanabilir.'
+    done: 'Teşekkürler, değerlendirmeniz gönderildi.'
+
+menus:
+  rate-freelancer:
+    done: 'Değerlendirmeniz için teşekkür ederiz.'
+
+buttons:
+  give-offer:
+    label: 'Teklif Ver'
+    not-found: 'Bilet bulunamadı.'
+    already-claimed: 'Bu bilete zaten bir ekip üyesi katıldı.'
+  creation-confirm:
+    label: 'Onayla'
+    only-author: 'Sadece %user% bu butonu kullanabilir.'
+  creation-restart:
+    label: 'Sıfırla'
+    only-author: 'Sadece %user% bu butonu kullanabilir.'
+  accept-offer:
+    label: 'Kabul Et'
+    freelancer-added-to-ticket: 'Ekip arkadaşımız %user% bilete eklendi.'
+    only-author: 'Sadece %user% bu butonu kullanabilir.'
+  freelancer-profile:
+    label: 'Profili Gör'
+  creation-commission:
+    label: 'Sipariş'
+    already-have: 'Aynı anda sadece bir aktif bilete sahip olabilirsiniz.'
+    successfully-created: 'Biletiniz başarıyla oluşturuldu. %ticket.channel% kanalına gidebilirsiniz.'
+  creation-support:
+    label: 'Destek'
+    already-have: 'Aynı anda sadece bir aktif bilete sahip olabilirsiniz.'
+    successfully-created: 'Biletiniz başarıyla oluşturuldu. %ticket.channel% kanalına gidebilirsiniz.'
+  close-ticket:
+    label: 'Bileti Kapat'
+
+commands:
+  ticket:
+    name: 'bilet'
+    description: 'Genel bilet komutu.'
+    only-in-ticket-channel: 'Bu komutu yalnızca bilet kanalınızda kullanabilirsiniz.'
+    send-creation-message:
+      name: 'oluşturmamesajıgönder'
+      description: 'Bilet oluşturma mesajını gönder.'
+      cannot-send-setup-message: 'Ekip sunucusunda bilet oluşturma mesajı ayarlayamazsınız.'
+      done: 'Bilet oluşturma mesajı gönderildi.'
+  add:
+    name: 'ekle'
+    description: 'Bir kullanıcıyı bilete ekle.'
+    member-already-added: 'Bu üye zaten bu bilete eklenmiş.'
+    done: '%user% başarıyla bilete eklendi.'
+    options:
+      user:
+        name: 'kullanıcı'
+        description: 'Kullanıcı.'
+  remove:
+    name: 'çıkar'
+    description: 'Biletten bir kullanıcıyı çıkar.'
+    member-already-removed: 'Bu üye zaten bilete eklenmemiş.'
+    done: '%user% başarıyla biletten çıkarıldı.'
+    options:
+      user:
+        name: 'kullanıcı'
+        description: 'Kullanıcı.'
+  close:
+    name: 'kapat'
+    description: 'Bir bileti kapat.'
+    you-cannot-close: 'Bu sipariş biletini siz kapatamazsınız.'
+    already-closing: 'Zaten bu bilet için kapatılma işlemleri başlatılmış.'
+    already-closed: 'Bu bilet zaten kapatılmış.'
+    done: 'Bilet kapatılıyor...'
+    options:
+      completed:
+        name: 'tamamlandımı'
+        description: 'Sipariş tamamlandı mı?'
+      reason:
+        name: 'sebep'
+        description: 'Bilet kapatma sebebi.'
+  profile:
+    name: 'profil'
+    description: 'Ekip üyelerimizin profilini görün.'
+    not-found: 'Bu kullanıcının profili bulunamadı.'
+    options:
+      user:
+        name: 'kullanıcı'
+        description: 'Kullanıcı.'
+  profiles:
+    name: 'profiller'
+    description: 'Profil oluştur, sil veya düzenle.'
+    create:
+      name: 'oluştur'
+      description: 'Profil oluştur.'
+      already-have: 'Bu kullanıcının zaten profili var.'
+      done: '%user% için başarıyla bir profil oluşturuldu.'
+      options:
+        user:
+          name: 'kullanıcı'
+          description: 'Kullanıcı.'
+        url:
+          name: 'url'
+          description: 'Url.'
+        accepted:
+          name: 'kabuledilen'
+          description: 'Kabul edilen sipariş sayısı.'
+        finished:
+          name: 'tamamlanan'
+          description: 'Tamamlanan sipariş sayısı.'
+        reviews:
+          name: 'görüşler'
+          description: 'Alınan görüş sayısı.'
+        stars:
+          name: 'yıldızlar'
+          description: 'Alınan yıldız sayısı.'
+    update:
+      name: 'güncelle'
+      description: 'Profil düzenle.'
+      profile-not-found: 'Bu kullanıcının profili yok, lütfen önce bir profil oluşturun.'
+      done: '%user% kullanıcısının profili başarıyla güncellendi.'
+      options:
+        user:
+          name: 'kullanıcı'
+          description: 'Kullanıcı.'
+        url:
+          name: 'url'
+          description: 'Url.'
+        accepted:
+          name: 'kabuledilen'
+          description: 'Kabul edilen sipariş sayısı.'
+        finished:
+          name: 'tamamlanan'
+          description: 'Tamamlanan sipariş sayısı.'
+        reviews:
+          name: 'görüşler'
+          description: 'Alınan görüş sayısı.'
+        stars:
+          name: 'yıldızlar'
+          description: 'Alınan yıldız sayısı.'
+    delete:
+      name: 'sil'
+      description: 'Profil sil.'
+      profile-not-found: 'Bu kullanıcının profili yok.'
+      done: '%user.tag% kullanıcısının profili silindi..'
+      options:
+        user:
+          name: 'kullanıcı'
+          description: 'Profili silinecek kullanıcı.'
+  review:
+    name: 'görüş'
+    description: 'Görüş yaz.'
+    wrong-channel: 'Bu komutu bu kanalda kullanamazsınız.'
+    only-customers-can-use: 'Sadece müşteriler bu komutu kullanabilir.'
+    done: 'Görüşünüz başarıyla iletildi.'
+    options:
+      stars:
+        name: 'yıldız'
+        description: 'Yıldız sayısı.'
+      review:
+        name: 'görüş'
+        description: 'Görüşünüz.'
+        length:
+          min: 1
+          max: 100
+  stats:
+    name: 'stats'
+    description: 'Ekip istatistiği.'

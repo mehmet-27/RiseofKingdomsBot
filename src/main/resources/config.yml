@@ -1,0 +1,21 @@
+screenSize:
+  width: 470
+  height: 850
+scout:
+  scoutCampPos:
+    x: 553
+    y: 70
+  investigation: true
+  mailPos:
+    x:
+    y:
+  reportsPos:
+    x:
+    y:
+  centerPos:
+    x:
+    y:
+method: "none"
+haoiUser: null
+haoiRebate: null
+twocaptchaKey: "7a266f2e2f0ed5b913773ce6b4253ef0"
