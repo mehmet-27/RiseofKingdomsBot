@@ -8,12 +8,16 @@ import org.opencv.core.Point;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import se.vidstige.jadb.JadbException;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiUtils {
 
@@ -28,10 +32,8 @@ public class GuiUtils {
     }
 
     public static LocXY getLocXY(IMAGEPATHS imagepaths) {
-        Mat mainImage = null;
-        Mat template = null;
-        mainImage = Imgcodecs.imread(screenShot());
-        template = Imgcodecs.imread(configManager.resolveResourcePath(imagepaths.getFileName()));
+        Mat mainImage = AdbUtils.getScreenShot();
+        Mat template = Imgcodecs.imread(configManager.resolveResourcePath(imagepaths.getFileName()));
 
         // / Create the result matrix
         int result_cols = mainImage.cols() - template.cols() + 1;
@@ -56,10 +58,10 @@ public class GuiUtils {
     }
 
     public static boolean checkIsPath(IMAGEPATHS imagepaths) {
-        Mat mainImage = null;
-        Mat template = null;
-        mainImage = Imgcodecs.imread(screenShot());
-        template = Imgcodecs.imread(configManager.resolveResourcePath(imagepaths.getFileName()));
+        Mat mainImage = AdbUtils.getScreenShot();
+        Mat template = Imgcodecs.imread(configManager.resolveResourcePath(imagepaths.getFileName()));
+
+        //mainImage = Imgcodecs.imread(configManager.getDataFolder().resolve("screenshot.png").toString());
 
         // / Create the result matrix
         int result_cols = mainImage.cols() - template.cols() + 1;
@@ -115,5 +117,28 @@ public class GuiUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static byte[] toByteArray(InputStream inputStream) throws IOException {
+        // Convert InputStream to byte array
+        List<Byte> byteList = new ArrayList<>();
+        int read;
+        while ((read = inputStream.read()) != -1) {
+            byteList.add((byte) read);
+        }
+
+        byte[] byteArray = new byte[byteList.size()];
+        for (int i = 0; i < byteList.size(); i++) {
+            byteArray[i] = byteList.get(i);
+        }
+
+        return byteArray;
+    }
+
+    private static Mat byteArrayToMat(byte[] byteArray) {
+        // Convert byte array to Mat
+        MatOfByte matOfByte = new MatOfByte(byteArray);
+
+        return Imgcodecs.imdecode(matOfByte, Imgcodecs.IMREAD_UNCHANGED);
     }
 }

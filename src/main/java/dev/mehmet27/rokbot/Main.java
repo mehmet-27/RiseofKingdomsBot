@@ -1,14 +1,18 @@
 package dev.mehmet27.rokbot;
 
-import com.sun.jna.Pointer;
 import dev.mehmet27.rokbot.frames.MainFrame;
 import dev.mehmet27.rokbot.managers.ConfigManager;
 import org.opencv.core.Core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.vidstige.jadb.JadbConnection;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
@@ -28,6 +32,7 @@ public class Main {
 
     private ScheduledFuture<?> scoutFogTask = null;
 
+    private JadbConnection jadbConnection;
 
     public static void main(String[] args) {
         try {
@@ -49,21 +54,16 @@ public class Main {
 
         //cacheManager = new CacheManager();
         //consoleCommandManager = new ConsoleCommandManager();
-        if (!isRokRunning()) {
+        /*if (!isRokRunning()) {
             JDialog dialog = new JDialog(mainFrame, "Hata!");
             JLabel label = new JLabel("Lütfen oyunu başlatın.");
             dialog.add(label);
             dialog.setSize(50, 150);
             dialog.setVisible(true);
-        } else {
-            User32 user32 = User32.INSTANCE;
-            Pointer hWnd = user32.FindWindow(null, "Rise of Kingdoms"); // Sets focus to my opened 'Downloads' folder
-            if (hWnd != null) {
-                user32.SetWindowPos(hWnd, null, 0, 0, 1280, 720, 0x0002);//0x0002
-                user32.SetWindowPos(hWnd, null, 0, 0, 1280, 720, 0x0001 | 0x0004);//0x0002
-                getLogger().info("Ekran boyutu 1280/720 olarak ayarlandı.");
-            }
-        }
+        }*/
+
+        jadbConnection = new JadbConnection();
+        jadbConnection.getDevices().forEach(System.out::println);
     }
 
     public void scoutFog() {
@@ -75,6 +75,10 @@ public class Main {
 
             }, 1, TimeUnit.SECONDS);
         }
+    }
+
+    public JadbConnection getAdb() {
+        return jadbConnection;
     }
 
     public void setScoutFogTask(ScheduledFuture<?> scoutFogTask) {
