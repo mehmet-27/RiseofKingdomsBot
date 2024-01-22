@@ -25,4 +25,6 @@ public class LocXY {
     public int getY() {
         return y;
     }
+
+
 }

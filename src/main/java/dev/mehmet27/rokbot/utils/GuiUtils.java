@@ -3,12 +3,12 @@ package dev.mehmet27.rokbot.utils;
 import dev.mehmet27.rokbot.IMAGEPATHS;
 import dev.mehmet27.rokbot.LocXY;
 import dev.mehmet27.rokbot.Main;
+import dev.mehmet27.rokbot.MatchResult;
 import dev.mehmet27.rokbot.managers.ConfigManager;
 import org.opencv.core.Point;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import se.vidstige.jadb.JadbException;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -57,11 +57,9 @@ public class GuiUtils {
         return new LocXY(0, 0);
     }
 
-    public static boolean checkIsPath(IMAGEPATHS imagepaths) {
+    public static MatchResult checkIsPath(IMAGEPATHS imagepaths) {
         Mat mainImage = AdbUtils.getScreenShot();
         Mat template = Imgcodecs.imread(configManager.resolveResourcePath(imagepaths.getFileName()));
-
-        //mainImage = Imgcodecs.imread(configManager.getDataFolder().resolve("screenshot.png").toString());
 
         // / Create the result matrix
         int result_cols = mainImage.cols() - template.cols() + 1;
@@ -75,27 +73,28 @@ public class GuiUtils {
         // / Localizing the best match with minMaxLoc
         Core.MinMaxLocResult mmr = Core.minMaxLoc(result);
 
-        if (imagepaths.equals(IMAGEPATHS.EXPLORE_BUTTON_2)) {
-            Imgproc.rectangle(mainImage, mmr.maxLoc, new Point(mmr.maxLoc.x + template.cols(), mmr.maxLoc.y + template.rows()), new Scalar(0, 255, 0));
-            Imgcodecs.imwrite(configManager.getDataFolder().resolve(imagepaths.getFileName()).toString(), mainImage);
-        }
+        Imgproc.rectangle(mainImage, mmr.maxLoc, new Point(mmr.maxLoc.x + template.cols(), mmr.maxLoc.y + template.rows()), new Scalar(0, 255, 0));
+        Imgcodecs.imwrite(configManager.getDataFolder().resolve(imagepaths.getFileName()).toString(), mainImage);
 
         Point matchLoc;
         matchLoc = mmr.maxLoc;
         double minMatchQuality = 0.8;
+        System.out.println("max val: " + mmr.maxVal);
         if (mmr.maxVal >= minMatchQuality) {
-            System.out.println("bulundu");
-            return true;
-        } else
-            System.out.println("bulunmadı");
-        return false;
+            System.out.println("bulundu: " + imagepaths.getFileName());
+            LocXY loc = new LocXY((int) (matchLoc.x + (template.size().width / 2)), (int) (matchLoc.y + (template.size().height / 2)));
+            return new MatchResult(true, loc);
+        } else {
+            System.out.println("bulunmadı: " + imagepaths.getFileName());
+            return new MatchResult(false, new LocXY(0, 0));
+        }
     }
 
-    public static boolean checkIsHome() {
+    public static MatchResult checkIsHome() {
         return checkIsPath(IMAGEPATHS.MAP_BUTTON);
     }
 
-    public static boolean checkIsMap() {
+    public static MatchResult checkIsMap() {
         return checkIsPath(IMAGEPATHS.HOME_BUTTON);
     }
 

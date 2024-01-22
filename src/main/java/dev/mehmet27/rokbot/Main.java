@@ -2,18 +2,18 @@ package dev.mehmet27.rokbot;
 
 import dev.mehmet27.rokbot.frames.MainFrame;
 import dev.mehmet27.rokbot.managers.ConfigManager;
+import dev.mehmet27.rokbot.tasks.CollectVillagesTask;
+import dev.mehmet27.rokbot.tasks.ScoutFogTask;
+import dev.mehmet27.rokbot.tasks.Task;
 import org.opencv.core.Core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.vidstige.jadb.JadbConnection;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -33,6 +33,8 @@ public class Main {
     private ScheduledFuture<?> scoutFogTask = null;
 
     private JadbConnection jadbConnection;
+
+    private List<Task> taskList = new ArrayList<>();
 
     public static void main(String[] args) {
         try {
@@ -64,6 +66,9 @@ public class Main {
 
         jadbConnection = new JadbConnection();
         jadbConnection.getDevices().forEach(System.out::println);
+
+        taskList.add(new ScoutFogTask());
+        taskList.add(new CollectVillagesTask());
     }
 
     public void scoutFog() {
@@ -113,5 +118,9 @@ public class Main {
 
     public ScheduledExecutorService getExecutorService() {
         return executorService;
+    }
+
+    public List<Task> getTaskList() {
+        return taskList;
     }
 }
