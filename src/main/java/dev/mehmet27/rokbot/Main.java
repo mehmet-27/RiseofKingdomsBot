@@ -2,6 +2,7 @@ package dev.mehmet27.rokbot;
 
 import dev.mehmet27.rokbot.frames.MainFrame;
 import dev.mehmet27.rokbot.managers.ConfigManager;
+import dev.mehmet27.rokbot.tasks.AllianceHelpTask;
 import dev.mehmet27.rokbot.tasks.CollectVillagesTask;
 import dev.mehmet27.rokbot.tasks.ScoutFogTask;
 import dev.mehmet27.rokbot.tasks.Task;
@@ -26,15 +27,19 @@ public class Main {
     public static final org.slf4j.Logger logger = LoggerFactory.getLogger(Main.class);
     private final ConfigManager configManager;
 
+    private final Settings settings;
+
     private MainFrame mainFrame;
 
-    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService taskExecutorService = Executors.newScheduledThreadPool(1);
 
     private ScheduledFuture<?> scoutFogTask = null;
 
     private JadbConnection jadbConnection;
 
     private List<Task> taskList = new ArrayList<>();
+
+    private boolean isTaskRunning = false;
 
     public static void main(String[] args) {
         try {
@@ -50,6 +55,7 @@ public class Main {
         System.out.println("Loaded successfully.");
         instance = this;
         configManager = new ConfigManager();
+        settings = new Settings();
 
         mainFrame = new MainFrame(this);
 
@@ -66,9 +72,10 @@ public class Main {
 
         jadbConnection = new JadbConnection();
         jadbConnection.getDevices().forEach(System.out::println);
-
+        taskList.add(new AllianceHelpTask());
         taskList.add(new ScoutFogTask());
         taskList.add(new CollectVillagesTask());
+
     }
 
     public void scoutFog() {
@@ -76,7 +83,7 @@ public class Main {
             scoutFogTask.cancel(true);
             scoutFogTask = null;
         } else {
-            scoutFogTask = getExecutorService().schedule(() -> {
+            scoutFogTask = getTaskExecutorService().schedule(() -> {
 
             }, 1, TimeUnit.SECONDS);
         }
@@ -116,11 +123,23 @@ public class Main {
         return false;
     }
 
-    public ScheduledExecutorService getExecutorService() {
-        return executorService;
+    public ScheduledExecutorService getTaskExecutorService() {
+        return taskExecutorService;
     }
 
     public List<Task> getTaskList() {
         return taskList;
+    }
+
+    public boolean isTaskRunning() {
+        return isTaskRunning;
+    }
+
+    public void setTaskRunning(boolean taskRunning) {
+        isTaskRunning = taskRunning;
+    }
+
+    public Settings getSettings() {
+        return settings;
     }
 }

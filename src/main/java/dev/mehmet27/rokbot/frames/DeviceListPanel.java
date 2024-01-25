@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 public class DeviceListPanel extends JPanel {
 
+    private final Main main = Main.getInstance();
+
     private final FileConfiguration config = Main.getInstance().getConfigManager().getConfig();
 
     private final MainFrame mainFrame;
@@ -17,14 +19,19 @@ public class DeviceListPanel extends JPanel {
     public DeviceListPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         setPreferredSize(new Dimension(800, 500));
-        JButton button = new JButton("Auto Fog");
+        JButton button = new JButton("Start Bot");
         button.setBounds(0, 0, 20, 5);
         button.addActionListener(event -> {
-            Main.getInstance().setScoutFogTask(Main.getInstance().getExecutorService().scheduleAtFixedRate(() -> {
-                for (Task task : Main.getInstance().getTaskList()) {
-                    task.run();
+            Main.getInstance().setScoutFogTask(Main.getInstance().getTaskExecutorService().scheduleAtFixedRate(() -> {
+                if (!main.isTaskRunning()) {
+                    main.setTaskRunning(true);
+                    for (int i = 0; i < main.getTaskList().size(); i++) {
+                        Task task = main.getTaskList().get(i);
+                        task.run();
+                    }
+                    main.setTaskRunning(false);
                 }
-            }, 0, 10, TimeUnit.SECONDS));
+            }, 0, 3, TimeUnit.SECONDS));
         });
         add(button);
     }

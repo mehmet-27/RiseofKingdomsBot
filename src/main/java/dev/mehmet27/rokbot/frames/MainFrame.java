@@ -25,7 +25,7 @@ public class MainFrame extends JFrame {
         tabbedPane = new JTabbedPane();
 
         JPanel displayDevicePanel = new DisplayDevicePanel();
-        JPanel settingsPanel = new SettingsPanel();
+        JPanel settingsPanel = new SettingsPanel(this);
         JPanel deviceListPanel = new DeviceListPanel(this);
         tabbedPane.addTab("Device List", deviceListPanel);
         tabbedPane.addTab("Display Device", displayDevicePanel);
@@ -37,5 +37,9 @@ public class MainFrame extends JFrame {
         bottomPanel.setPreferredSize(new Dimension(800, 100));
 
         add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    public Main getMain() {
+        return main;
     }
 }
