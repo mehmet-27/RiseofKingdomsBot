@@ -1,21 +1,13 @@
 package dev.mehmet27.rokbot;
 
-import dev.mehmet27.rokbot.frames.MainFrame;
-import dev.mehmet27.rokbot.managers.ConfigManager;
-import dev.mehmet27.rokbot.tasks.AllianceHelpTask;
-import dev.mehmet27.rokbot.tasks.CollectVillagesTask;
-import dev.mehmet27.rokbot.tasks.ScoutFogTask;
-import dev.mehmet27.rokbot.tasks.Task;
+import com.formdev.flatlaf.FlatDarculaLaf;
+import dev.mehmet27.rokbot.frames.MainForm;
+import dev.mehmet27.rokbot.managers.*;
 import org.opencv.core.Core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.vidstige.jadb.JadbConnection;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import javax.swing.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -23,123 +15,115 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
 
-    private static Main instance;
-    public static final org.slf4j.Logger logger = LoggerFactory.getLogger(Main.class);
-    private final ConfigManager configManager;
+	private static Main instance;
+	public static final org.slf4j.Logger logger = LoggerFactory.getLogger(Main.class);
+	private final ConfigManager configManager;
 
-    private final Settings settings;
+	private final Settings settings;
 
-    private MainFrame mainFrame;
+	private final StorageManager storageManager;
+	private final CacheManager cacheManager;
+	private final TaskManager taskManager;
+	private final AdbManager adbManager;
 
-    private final ScheduledExecutorService taskExecutorService = Executors.newScheduledThreadPool(1);
+	private MainForm mainForm;
 
-    private ScheduledFuture<?> scoutFogTask = null;
+	private final ScheduledExecutorService taskExecutorService = Executors.newScheduledThreadPool(1);
 
-    private JadbConnection jadbConnection;
+	private ScheduledFuture<?> runningTask = null;
 
-    private List<Task> taskList = new ArrayList<>();
+	private boolean isTaskRunning = false;
 
-    private boolean isTaskRunning = false;
+	public static void main(String[] args) {
+		try {
+			new Main();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    public static void main(String[] args) {
-        try {
-            new Main();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	public Main() throws Exception {
+		getLogger().info("Loading Native OpenCV...");
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		getLogger().info("OpenCV loaded successfully.");
+		instance = this;
+		configManager = new ConfigManager();
+		settings = new Settings();
+		storageManager = new StorageManager(this);
+		cacheManager = new CacheManager(this);
+		taskManager = new TaskManager(this);
+		adbManager = new AdbManager(this);
 
-    public Main() throws Exception {
-        System.out.println("Loading Native OpenCv...");
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        System.out.println("Loaded successfully.");
-        instance = this;
-        configManager = new ConfigManager();
-        settings = new Settings();
+		//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		UIManager.setLookAndFeel(new FlatDarculaLaf());
+		SwingUtilities.invokeLater(() -> {
+			mainForm = new MainForm();
+			mainForm.setVisible(true);
+		});
 
-        mainFrame = new MainFrame(this);
+		//cacheManager = new CacheManager();
+	}
 
+	public void scoutFog() {
+		if (runningTask != null) {
+			runningTask.cancel(true);
+			runningTask = null;
+		} else {
+			runningTask = getTaskExecutorService().schedule(() -> {
 
-        //cacheManager = new CacheManager();
-        //consoleCommandManager = new ConsoleCommandManager();
-        /*if (!isRokRunning()) {
-            JDialog dialog = new JDialog(mainFrame, "Hata!");
-            JLabel label = new JLabel("Lütfen oyunu başlatın.");
-            dialog.add(label);
-            dialog.setSize(50, 150);
-            dialog.setVisible(true);
-        }*/
+			}, 1, TimeUnit.SECONDS);
+		}
+	}
 
-        jadbConnection = new JadbConnection();
-        jadbConnection.getDevices().forEach(System.out::println);
-        taskList.add(new AllianceHelpTask());
-        taskList.add(new ScoutFogTask());
-        taskList.add(new CollectVillagesTask());
+	public MainForm getMainForm() {
+		return mainForm;
+	}
 
-    }
+	public void setRunningTask(ScheduledFuture<?> runningTask) {
+		this.runningTask = runningTask;
+	}
 
-    public void scoutFog() {
-        if (scoutFogTask != null) {
-            scoutFogTask.cancel(true);
-            scoutFogTask = null;
-        } else {
-            scoutFogTask = getTaskExecutorService().schedule(() -> {
+	public static Main getInstance() {
+		return instance;
+	}
 
-            }, 1, TimeUnit.SECONDS);
-        }
-    }
+	public static Logger getLogger() {
+		return logger;
+	}
 
-    public JadbConnection getAdb() {
-        return jadbConnection;
-    }
+	public ConfigManager getConfigManager() {
+		return configManager;
+	}
 
-    public void setScoutFogTask(ScheduledFuture<?> scoutFogTask) {
-        this.scoutFogTask = scoutFogTask;
-    }
+	public StorageManager getStorageManager() {
+		return storageManager;
+	}
 
-    public static Main getInstance() {
-        return instance;
-    }
+	public CacheManager getCacheManager() {
+		return cacheManager;
+	}
 
-    public static Logger getLogger() {
-        return logger;
-    }
+	public ScheduledExecutorService getTaskExecutorService() {
+		return taskExecutorService;
+	}
 
-    public ConfigManager getConfigManager() {
-        return configManager;
-    }
+	public boolean isTaskRunning() {
+		return isTaskRunning;
+	}
 
-    public boolean isRokRunning() {
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder("tasklist.exe");
-            Process process = processBuilder.start();
-            Scanner scanner = new Scanner(process.getInputStream(), StandardCharsets.UTF_8).useDelimiter("\\A");
-            String tasksList = scanner.hasNext() ? scanner.next() : "";
-            scanner.close();
-            return tasksList.contains("MASS");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+	public void setTaskRunning(boolean taskRunning) {
+		isTaskRunning = taskRunning;
+	}
 
-    public ScheduledExecutorService getTaskExecutorService() {
-        return taskExecutorService;
-    }
+	public Settings getSettings() {
+		return settings;
+	}
 
-    public List<Task> getTaskList() {
-        return taskList;
-    }
+	public TaskManager getTaskManager() {
+		return taskManager;
+	}
 
-    public boolean isTaskRunning() {
-        return isTaskRunning;
-    }
-
-    public void setTaskRunning(boolean taskRunning) {
-        isTaskRunning = taskRunning;
-    }
-
-    public Settings getSettings() {
-        return settings;
-    }
+	public AdbManager getAdbManager() {
+		return adbManager;
+	}
 }

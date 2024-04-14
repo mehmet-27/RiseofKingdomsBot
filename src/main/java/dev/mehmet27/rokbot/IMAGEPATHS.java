@@ -14,6 +14,9 @@ public enum IMAGEPATHS {
     ALLIANCE_BUTTON("alliance_button.png", "alliance_help.png"),
     ALLIANCE_HELP("alliance_help.png", null),
     ALLIANCE_HELP_BUTTON("alliance_help_button.png", null),
+    RESOURCE_SEARCH_BUTTON("resource_search_button.png", null),
+    RESOURCE_GATHER_BUTTON("resource_gather_button.png", null),
+    HAS_MATCH_QUERY("has_match_query.png", null),
     HOME_BUTTON("home_button.png", null);
 
     private final String fileName;

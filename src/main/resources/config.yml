@@ -1,21 +1,15 @@
 screenSize:
   width: 470
-  height: 850
+  height: 700
 scout:
   scoutCampPos:
     x: 553
     y: 70
   investigation: true
-  mailPos:
-    x:
-    y:
-  reportsPos:
-    x:
-    y:
-  centerPos:
-    x:
-    y:
-method: "none"
-haoiUser: null
-haoiRebate: null
-twocaptchaKey: ""
+
+feature:
+  gather-resource:
+    enable: true
+    use-secondary-commander: false
+  alliance-help:
+    enable: true
