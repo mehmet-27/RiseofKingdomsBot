@@ -78,7 +78,7 @@ public class Task {
 		}
 	}
 
-	public void sleepUntil(long millis){
+	public void sleepUntil(long millis) {
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
@@ -86,9 +86,10 @@ public class Task {
 		}
 	}
 
-	public void sleepUntil(long min, long max){
+	public void sleepUntil(long min, long max) {
 		try {
-			Thread.sleep(new Random().nextInt((int) (max - min)) + min);
+			long wait = new Random().nextInt((int) (max - min)) + min;
+			Thread.sleep(wait);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

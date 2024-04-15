@@ -109,6 +109,16 @@ public class AdbUtils {
 				new Random().nextInt(yMax - yMin) + yMin);
 	}
 
+	public static void swipeRandom(int xMin, int xMax, int yStart, int yEnd, int duration) {
+		int x = new Random().nextInt(xMax - xMin) + xMin;
+		try {
+			String command = String.format("input swipe %s %s %s %s %s", x, yStart, x, yEnd, duration);
+			jadbConnection.getDevices().get(0).executeShell(command);
+		} catch (IOException | JadbException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void tap(int x, int y) {
 		try {
 			String command = String.format("input tap %s %s", x, y);
@@ -159,7 +169,10 @@ public class AdbUtils {
 
 	public enum LOC {
 		KILL_INFO(new LocXYRandom(886, 904, 243, 260)),
-		MORE_INFO(new LocXYRandom(250, 315, 565, 621));
+		MORE_INFO(new LocXYRandom(250, 315, 565, 621)),
+		CLOSE_MORE_INFO(new LocXYRandom(1105, 1125, 32, 54)),
+		CLOSE_PROFILE(new LocXYRandom(1078, 1104, 72, 93)),
+		COPY_NAME(new LocXYRandom(495, 525, 190, 205));
 
 		LocXYRandom loc;
 
